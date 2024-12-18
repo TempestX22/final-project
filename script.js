@@ -94,15 +94,15 @@ function draw() {
   background(0, 0, 0);
 
   //draw stars
-  push();
-  tint(255, 255, 255, 128);
-  for (let y = 0; y < 20; y++) {
-    for (let i = 0; i < 80; i++) {
-      image(starimg,(i*200), y*200, 10, 10);
-    }
-  }
-  noTint();
-  pop();
+  // push();
+  // tint(255, 255, 255, 128);
+  // for (let y = 0; y < 20; y++) {
+  //   for (let i = 0; i < 80; i++) {
+  //     image(starimg,(i*200), y*200, 10, 10);
+  //   }
+  // }
+  // noTint();
+  // pop();
 
   // Draw the player as an image
   image(playerimg, mouseX - 50, height - 100, 100, 100); // Adjusted size and position
