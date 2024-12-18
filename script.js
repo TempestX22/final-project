@@ -31,6 +31,8 @@ let lives = 3;
 let boss;
 let enemyimg;
 let playerimg;
+let starimg;
+let bulletimg;
 
 let startButton;
 let restartButton;
@@ -41,11 +43,13 @@ function preload ()
   //boss = loadModel("objects/tree.obj");
   enemyimg = loadImage("images/enemy.png");
   playerimg = loadImage("images/player.png");
+  starimg = loadImage("images/star.png");
+  bulletimg = loadImage("images/bullet.png");
 }
 
 function setup() {
   // Create the start button and place it in the middle
-  createCanvas(windowWidth, windowHeight - 75);
+  createCanvas(windowWidth, windowHeight - 65);
   rectMode(CENTER);
   textSize(30);
 
@@ -91,12 +95,13 @@ function draw() {
 
   //draw stars
   push();
-  fill(255, 255, 255, 50);
+  tint(255, 255, 255, 128);
   for (let y = 0; y < 20; y++) {
     for (let i = 0; i < 80; i++) {
-      circle(random(i * windowWidth), random(y * windowHeight), 20);
+      image(starimg,(i*200), y*200, 10, 10);
     }
   }
+  noTint();
   pop();
 
   // Draw the player as an image
@@ -104,14 +109,14 @@ function draw() {
 
   // Update and draw the balls
   for (let ball of balls) {
-    fill(0, 0, 200);
     ball.y -= 20;
-    circle(ball.x, ball.y, 10);
+    image(bulletimg,ball.x, ball.y, 20,20);
   }
 
   // Push enemies down towards the player and draw them as images
   for (let enemy of enemies) {
-    enemy.y += 2;
+    //speed of enemies
+    enemy.y += 4;
     image(enemyimg, enemy.x, enemy.y, 40, 40); // Draw the enemy image
 
     if (enemy.y > height) {
@@ -163,6 +168,7 @@ function draw() {
 
   // Display score and lives
   fill(255);
+  textFont('Courier New');
   text("Score: " + score, 20, 80);
   text("Lives: " + lives, 20, 40);
 }
