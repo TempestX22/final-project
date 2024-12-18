@@ -1,24 +1,30 @@
-
-*{
+* {
   margin: 0px;
   padding: 0px;
+  box-sizing: border-box;
 }
 
-.header{
-  background-color: black;
-  z-index: 1;
-
-}
-h1{
-  top: 100%;
-  color: white;
-  display: inline-block;
-  text-align: left;
-  padding: 10px;
+body {
+  background-color: darkgray;
   z-index: 2;
 }
 
+/* Header Styling */
+.header {
+  background-color: black;
+  z-index: 1;
+  padding: 10px 20px;
+}
+
+h1 {
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.5em;
+}
+
 .hover-icon {
+  margin-right: 10px;
   transition: transform 0.3s ease; /* Smooth transition */
 }
 
@@ -26,12 +32,13 @@ h1{
   transform: scale(1.2); /* Increase size to 120% */
 }
 
-body{
-  background-color:darkgray;
-  z-index: 2;
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.start{
+.start {
   width: 200px;
   height: 70px;
   font-size: 18px;
@@ -44,26 +51,18 @@ body{
   outline: none;
 }
 
-.button-container {
-  display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-}
-
 button:active {
   animation: bounce 0.5s ease;
 }
 
 @keyframes bounce {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-.new-background {
-  background-image: url('images/background.png');
-  background-size: 1920px 1050px; /* Set width and height */
-  background-repeat: no-repeat; /* Prevent tiling */
-  background-position: bottom;
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
