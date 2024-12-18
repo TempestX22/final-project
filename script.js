@@ -46,24 +46,26 @@ function preload ()
   playerimg = loadImage("images/player.png");
   starimg = loadImage("images/star.png");
   bulletimg = loadImage("images/bullet.png");
-
+    // Create and Give the mouse a position
+    startButton = createButton('Start');
+    startButton.position(windowWidth / 2, windowHeight / 2);
+  
+  
+    // Customize button appearance
+    startButton.style('background-color', '#007BFF');  // Set background color
+    startButton.style('color', 'white');  // Set text color
+    startButton.style('padding', '10px 20px');  // Set padding
+    startButton.style('border-radius', '5px');  // Set rounded corners
+    startButton.style('font-size', '18px');  // Set font size
+      // Call start function when the start button is pressed
+  startButton.mousePressed(start);
 }
 
 function setup() {
   canvas1.remove();
-  // Create and Give the mouse a position
-  startButton = createButton('Start');
-  startButton.position(windowWidth / 2, windowHeight / 2);
 
-  // Customize button appearance
-  startButton.style('background-color', '#007BFF');  // Set background color
-  startButton.style('color', 'white');  // Set text color
-  startButton.style('padding', '10px 20px');  // Set padding
-  startButton.style('border-radius', '5px');  // Set rounded corners
-  startButton.style('font-size', '18px');  // Set font size
   
-  // Call start function when the start button is pressed
-  startButton.mousePressed(start);
+
 }
 
 function start() {
@@ -73,9 +75,10 @@ function start() {
   bgm.play();
 
   // Create the canvas
-  createCanvas(windowWidth, windowHeight - 65);
+  canvas1 = createCanvas(windowWidth, windowHeight - 65);
   rectMode(CENTER);
   textSize(30);
+  background(0);
 
   // Initialize game state
   score = 0;
