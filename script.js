@@ -20,6 +20,7 @@ const losesfx = new Audio('sfx/lose_sfx.wav');
 const buttonsfx = new Audio('sfx/mellau__button-click-3.wav');
 const lasersfx = new Audio('sfx/laser_sfx.wav');
 const winsfx = new Audio('sfx/win_sfx.wav');
+const bgm = new Audio('sfx/Jeremy Blake - Powerup.mp3');
 let canShoot = false;
 
 let t = 0;
@@ -27,9 +28,20 @@ let balls = [];
 let enemies = [];
 let score = 0;
 let lives = 3;
+let boss;
+let enemyimg;
+let playerimg;
 
 let startButton;
 let restartButton;
+
+//preload things
+function preload ()
+{
+  //boss = loadModel("objects/tree.obj");
+  enemyimg = loadImage("images/enemy.png");
+  playerimg = loadImage("images/player.png");
+}
 
 function setup() {
   // Create the start button and place it in the middle
@@ -56,6 +68,7 @@ function start() {
   // Hide the start button
   startButton.style('display', 'none');
   startsfx.play();
+  bgm.play();
   // Initialize game state
   score = 0;
   lives = 3;
@@ -72,20 +85,22 @@ function start() {
   }
 }
 
+
 function draw() {
-  background(0,0,0);
+  background(0, 0, 0);
+
+  //draw stars
   push();
-  fill(255,255,255,50);
-  circle(200,200, 20);
+  fill(255, 255, 255, 50);
+  for (let y = 0; y < 20; y++) {
+    for (let i = 0; i < 80; i++) {
+      circle(random(i * windowWidth), random(y * windowHeight), 20);
+    }
+  }
   pop();
 
-  //createShinyBackground();
-  
-  // Draw the player
-  fill(200, 100, 0);
-  rect(mouseX, height - 50, 100, 30);
-  fill(0, 100, 200);
-  rect(mouseX, height - 70, 50, 30);
+  // Draw the player as an image
+  image(playerimg, mouseX - 50, height - 100, 100, 100); // Adjusted size and position
 
   // Update and draw the balls
   for (let ball of balls) {
@@ -94,11 +109,11 @@ function draw() {
     circle(ball.x, ball.y, 10);
   }
 
-  // Push enemies down towards the player
+  // Push enemies down towards the player and draw them as images
   for (let enemy of enemies) {
-    fill(200, 0, 0);
     enemy.y += 2;
-    rect(enemy.x, enemy.y, 20);
+    image(enemyimg, enemy.x, enemy.y, 40, 40); // Draw the enemy image
+
     if (enemy.y > height) {
       enemies.splice(enemies.indexOf(enemy), 1);
       lives -= 1;
@@ -108,10 +123,10 @@ function draw() {
   // Collision detection between enemies and balls
   for (let enemy of enemies) {
     for (let ball of balls) {
-      if (dist(enemy.x, enemy.y, ball.x, ball.y) < 20) {
+      if (dist(enemy.x + 20, enemy.y + 20, ball.x, ball.y) < 20) { // Adjusted for image center
         enemies.splice(enemies.indexOf(enemy), 1);
         balls.splice(balls.indexOf(ball), 1);
-        
+
         // Spawn a new enemy
         let newEnemy = {
           x: random(0, width),
@@ -132,52 +147,31 @@ function draw() {
 
   // Check if score reaches a random value (win condition)
   if (score >= random(10, 20)) {
-  restartButton = createButton('Restart');
-  restartButton.position(windowWidth / 2 - 60, windowHeight / 2 + 50);
+    restartButton = createButton('Restart');
+    restartButton.position(windowWidth / 2 - 60, windowHeight / 2 + 50);
 
-  // Customize button appearance
-  restartButton.style('background-color', '#007BFF');  // Set background color
-  restartButton.style('color', 'white');  // Set text color
-  restartButton.style('padding', '10px 20px');  // Set padding
-  restartButton.style('border-radius', '5px');  // Set rounded corners
-  restartButton.style('font-size', '18px');  // Set font size
-  restartButton.mousePressed(restart);
-  winsfx.play();
-  noLoop(); // Stop the game loop
+    // Customize button appearance
+    restartButton.style('background-color', '#007BFF');  // Set background color
+    restartButton.style('color', 'white');  // Set text color
+    restartButton.style('padding', '10px 20px');  // Set padding
+    restartButton.style('border-radius', '5px');  // Set rounded corners
+    restartButton.style('font-size', '18px');  // Set font size
+    restartButton.mousePressed(restart);
+    winsfx.play();
+    noLoop(); // Stop the game loop
   }
 
   // Display score and lives
-  fill(0);
+  fill(255);
   text("Score: " + score, 20, 80);
   text("Lives: " + lives, 20, 40);
-}
-
-function createShinyBackground() {
-  noStroke();
-  background (0,0,0);
-  let gradientColor = color(255, 255, 255, 50); // Semi-transparent white for shine
-
-  for (let y = 0; y < height; y++) {
-    let brightness = map(
-      sin((y + shinyEffectOffset) * 0.02),
-      -1,
-      1,
-      0,
-      100
-    ); // Wavy shine
-    let col = lerpColor(color(0, 0, 0), gradientColor, brightness / 100);
-    stroke(col);
-    line(0, y, width, y);
-  }
-
-  // Move the shiny effect
-  shinyEffectOffset += 2;
 }
 // Create restart button when the game is over
 function createRestartButton() {
   // Only create a new restart button if it doesn't already exist
   if (!restartButton) {
   canShoot = false;
+  bgm.pause();
   restartButton = createButton('Restart');
   restartButton.position(windowWidth / 2 - 60, windowHeight / 2 + 50);
 
