@@ -33,6 +33,7 @@ let enemyimg;
 let playerimg;
 let starimg;
 let bulletimg;
+let canvas1;
 
 let startButton;
 let restartButton;
@@ -45,14 +46,11 @@ function preload ()
   playerimg = loadImage("images/player.png");
   starimg = loadImage("images/star.png");
   bulletimg = loadImage("images/bullet.png");
+
 }
 
 function setup() {
-  // Create the start button and place it in the middle
-  createCanvas(windowWidth, windowHeight - 65);
-  rectMode(CENTER);
-  textSize(30);
-
+  canvas1.remove();
   // Create and Give the mouse a position
   startButton = createButton('Start');
   startButton.position(windowWidth / 2, windowHeight / 2);
@@ -73,6 +71,12 @@ function start() {
   startButton.style('display', 'none');
   startsfx.play();
   bgm.play();
+
+  // Create the canvas
+  createCanvas(windowWidth, windowHeight - 65);
+  rectMode(CENTER);
+  textSize(30);
+
   // Initialize game state
   score = 0;
   lives = 3;
@@ -116,7 +120,7 @@ function draw() {
   // Push enemies down towards the player and draw them as images
   for (let enemy of enemies) {
     //speed of enemies
-    enemy.y += 4;
+    enemy.y += 1;
     image(enemyimg, enemy.x, enemy.y, 40, 40); // Draw the enemy image
 
     if (enemy.y > height) {
