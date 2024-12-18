@@ -15,6 +15,12 @@
 //     // document.body.classList.add('new-background');
 //   }, 1000);
 // });
+const startsfx = new Audio('sfx/start_sfx.wav');
+const losesfx = new Audio('sfx/lose_sfx.wav');
+const buttonsfx = new Audio('sfx/mellau__button-click-3.wav');
+const lasersfx = new Audio('sfx/laser_sfx.wav');
+const winsfx = new Audio('sfx/win_sfx.wav');
+let canShoot = false;
 
 let t = 0;
 let balls = [];
@@ -27,7 +33,7 @@ let restartButton;
 
 function setup() {
   // Create the start button and place it in the middle
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight - 75);
   rectMode(CENTER);
   textSize(30);
 
@@ -49,17 +55,13 @@ function setup() {
 function start() {
   // Hide the start button
   startButton.style('display', 'none');
-  
-  // Set up the game canvas
-
-
-  
+  startsfx.play();
   // Initialize game state
   score = 0;
   lives = 3;
   balls = [];
   enemies = [];
-  
+  canShoot = true;
   // Spawn enemies at the start
   for (let i = 0; i < 5; i++) {
     let enemy = {
@@ -71,10 +73,16 @@ function start() {
 }
 
 function draw() {
-  background(130, 130, 30);
-  fill(200, 100, 0);
+  background(0,0,0);
+  push();
+  fill(255,255,255,50);
+  circle(200,200, 20);
+  pop();
+
+  //createShinyBackground();
   
   // Draw the player
+  fill(200, 100, 0);
   rect(mouseX, height - 50, 100, 30);
   fill(0, 100, 200);
   rect(mouseX, height - 70, 50, 30);
@@ -117,15 +125,25 @@ function draw() {
 
   // Check if lives are less than 1 (game over)
   if (lives < 1) {
-    text("Game Over", width / 2, height / 2);
     noLoop(); // Stop the game loop
     createRestartButton(); // Show the restart button
+    losesfx.play();
   }
 
   // Check if score reaches a random value (win condition)
   if (score >= random(10, 20)) {
-    text("You Win", width / 2, height / 2);
-    noLoop(); // Stop the game loop
+  restartButton = createButton('Restart');
+  restartButton.position(windowWidth / 2 - 60, windowHeight / 2 + 50);
+
+  // Customize button appearance
+  restartButton.style('background-color', '#007BFF');  // Set background color
+  restartButton.style('color', 'white');  // Set text color
+  restartButton.style('padding', '10px 20px');  // Set padding
+  restartButton.style('border-radius', '5px');  // Set rounded corners
+  restartButton.style('font-size', '18px');  // Set font size
+  restartButton.mousePressed(restart);
+  winsfx.play();
+  noLoop(); // Stop the game loop
   }
 
   // Display score and lives
@@ -134,13 +152,43 @@ function draw() {
   text("Lives: " + lives, 20, 40);
 }
 
+function createShinyBackground() {
+  noStroke();
+  background (0,0,0);
+  let gradientColor = color(255, 255, 255, 50); // Semi-transparent white for shine
+
+  for (let y = 0; y < height; y++) {
+    let brightness = map(
+      sin((y + shinyEffectOffset) * 0.02),
+      -1,
+      1,
+      0,
+      100
+    ); // Wavy shine
+    let col = lerpColor(color(0, 0, 0), gradientColor, brightness / 100);
+    stroke(col);
+    line(0, y, width, y);
+  }
+
+  // Move the shiny effect
+  shinyEffectOffset += 2;
+}
 // Create restart button when the game is over
 function createRestartButton() {
   // Only create a new restart button if it doesn't already exist
   if (!restartButton) {
-    restartButton = createButton('Restart');
-    restartButton.position(windowWidth / 2 - 60, windowHeight / 2 + 50);
-    restartButton.mousePressed(restart);
+  canShoot = false;
+  restartButton = createButton('Restart');
+  restartButton.position(windowWidth / 2 - 60, windowHeight / 2 + 50);
+
+    // Customize button appearance
+  restartButton.style('background-color', '#007BFF');  // Set background color
+  restartButton.style('color', 'white');  // Set text color
+  restartButton.style('padding', '10px 20px');  // Set padding
+  restartButton.style('border-radius', '5px');  // Set rounded corners
+  restartButton.style('font-size', '18px');  // Set font size
+  restartButton.mousePressed(restart);
+  buttonsfx.play();
   }
 }
 
@@ -148,16 +196,33 @@ function createRestartButton() {
 function restart() {
   // Hide the restart button and restart the game
   restartButton.style('display', 'none');
-  location.reload();
+
+
+  setTimeout(() => {
+    location.reload();
+  }, 500);
 }
 
 // Spawns a ball every time the mouse is pressed
 function mousePressed() {
-  let ball = {
-    x: mouseX,
-    y: height - 100,
-  };
-  balls.push(ball);
+  if (canShoot) {
+    lasersfx.play();
+
+    // Spawn a ball
+    let ball = {
+      x: mouseX,
+      y: height - 100,
+    };
+    balls.push(ball);
+
+    // Temporarily disable shooting
+    canShoot = false;
+
+    // Re-enable shooting after 500ms
+    setTimeout(() => {
+      canShoot = true;
+    }, 500);
+  }
 }
 
 // Resize the canvas when the window is resized
